@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljxy.score.mapper.EscoreMapper">
+    <resultMap id="EscoreMap" type="com.ljxy.score.entity.Escore">
+        <id property="id" column="id"></id>
+        <result property="examId" column="exam_id"></result>
+        <result property="clazzId" column="clazz_id"></result>
+        <result property="studentId" column="student_id"></result>
+        <result property="gradeId" column="grade_id"></result>
+        <result property="courseId" column="course_id"></result>
+        <result property="score" column="score"></result>
+        <association property="student" javaType="com.ljxy.score.entity.Student">
+            <result property="stuId" column="studentId"></result>
+            <result property="stuName" column="studentName"></result>
+        </association>
+        <association property="course" javaType="com.ljxy.score.entity.Course">
+            <id property="id" column="courseId"></id>
+            <result property="name" column="courseName"></result>
+        </association>
+        <association property="clazz" javaType="com.ljxy.score.entity.Clazz">
+            <id property="id" column="clazzId"></id>
+            <result property="name" column="clazzName"></result>
+        </association>
+    </resultMap>
+    <select id="selectScore" resultMap="EscoreMap">
+        SELECT
+	escore.*,
+	student.stu_id AS studentId,
+	student.stu_name AS studentName,
+	course.id AS courseId,
+	course.NAME AS courseName
+FROM
+	escore
+	LEFT JOIN student ON student.id = escore.student_id
+	LEFT JOIN course ON course.id = escore.course_id
+	<where>
+        <if test="examId !=null">
+            and exam_id = #{examId}
+        </if>
+        <if test="studentId !=null">
+            and student.stu_id =#{studentId}
+        </if>
+        <if test="gradeId !=null">
+            and escore.grade_id = #{gradeId}
+        </if>
+        <if test="clazzId !=null">
+            and escore.clazz_id = #{clazzId}
+        </if>
+        <if test="courseId !=null">
+            and escore.course_id = #{courseId}
+        </if>
+    </where>
+    </select>
+<!--分页查询成绩信息，（管理员）-->
+    <select id="findPage" resultMap="EscoreMap">
+        SELECT
+        escore.*,
+        student.stu_id AS studentId,
+        student.stu_name AS studentName,
+        course.id AS courseId,
+        course.NAME AS courseName,
+        clazz.id as clazzId,
+        clazz.name as clazzName
+        FROM
+        escore
+        LEFT JOIN student ON student.id = escore.student_id
+        LEFT JOIN course ON course.id = escore.course_id
+        left join clazz on clazz.id = escore.clazz_id
+        <where>
+            <if test="examId !=null">
+                and exam_id = #{examId}
+            </if>
+            <if test="studentId !=null">
+                and student.stu_id like concat('%', #{studentId}, '%')
+            </if>
+            <if test="gradeId !=null">
+                and escore.grade_id = #{gradeId}
+            </if>
+            <if test="clazzId !=null">
+                and escore.clazz_id = #{clazzId}
+            </if>
+            <if test="courseId !=null">
+                and escore.course_id = #{courseId}
+            </if>
+        </where>
+        order by score desc
+    </select>
+<!--    根据id更新成绩-->
+    <update id="updateScore">
+        update escore set score = #{score} where id = #{id}
+    </update>
+<!--查询考试的平均成绩-->
+    <select id="selectAvg" resultType="float">
+        select AVG(score) as courseAvg from escore
+        <where>
+            <if test="examId !=null">
+                and exam_id = #{examId}
+            </if>
+            <if test="gradeId !=null">
+                and grade_id = #{gradeId}
+            </if>
+            <if test="clazzId !=null">
+                and clazz_id = #{clazzId}
+            </if>
+            <if test="courseId !=null">
+                and course_id = #{courseId}
+            </if>
+        </where>
+    </select>
+
+<!--    查询考试的各班的平均分-->
+    <select id="clazzAvg" resultType="com.ljxy.score.entity.Vo.ClazzAvgVo">
+        select clazz.name as clazzName,
+                AVG (score) as clazzAvg
+        from escore
+        right join clazz on clazz.id = escore.clazz_id
+        <where>
+            <if test="examId !=null">
+                and exam_id = #{examId}
+            </if>
+            <if test="gradeId !=null">
+                and escore.grade_id = #{gradeId}
+            </if>
+            <if test="courseId !=null">
+                and escore.course_id = #{courseId}
+            </if>
+        </where>
+        group by clazz.name
+        order by AVG (score)
+    </select>
+    <select id="heightScore" resultType="float">
+        select MAX(score) from escore
+        <where>
+            <if test="examId !=null">
+                and exam_id = #{examId}
+            </if>
+            <if test="gradeId !=null">
+                and escore.grade_id = #{gradeId}
+            </if>
+            <if test="courseId !=null">
+                and escore.course_id = #{courseId}
+            </if>
+            <if test="clazzId !=null">
+                and clazz_id = #{clazzId}
+            </if>
+        </where>
+    </select>
+</mapper>

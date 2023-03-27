@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljxy.score.mapper.HeadmasterMapper">
+    <resultMap id="HeadmasterMap" type="com.ljxy.score.entity.Headmaster">
+        <id property="id" column="id"></id>
+        <result property="headmasterId" column="headmaster_id"></result>
+        <result property="headmasterName" column="headmaster_name"></result>
+        <result property="sex" column="sex"></result>
+        <result property="age" column="age"></result>
+        <result property="clazzId" column="clazz_id"></result>
+        <result property="gradeId" column="grade_id"></result>
+        <result property="phone" column="phone"></result>
+        <association property="clazz" javaType="com.ljxy.score.entity.Clazz">
+            <id property="id" column="c_id"></id>
+            <result column="c_name" property="name"></result>
+        </association>
+        <association property="grade" javaType="com.ljxy.score.entity.Grade">
+            <id property="id" column="g_id"></id>
+            <result property="name" column="g_name"></result>
+        </association>
+    </resultMap>
+
+    <select id="findPge" resultMap="HeadmasterMap">
+SELECT
+	headmaster.*,
+	grade.id AS g_id,
+	grade.NAME AS g_name,
+	clazz.id AS c_id,
+	clazz.`name` AS c_name
+FROM
+	headmaster
+	LEFT JOIN grade ON grade.id = headmaster.grade_id
+	LEFT JOIN clazz ON clazz.id = headmaster.clazz_id
+    <where>
+        <if test="headmasterName != null and headmasterName != ''">
+            and headmaster_name like concat('%', #{headmasterName}, '%')
+        </if>
+        <if test="gradeId != null">
+            and headmaster.grade_id =#{gradeId}
+        </if>
+        <if test="clazzId != null">
+            and headmaster.clazz_id =#{clazzId}
+        </if>
+    </where>
+    </select>
+</mapper>

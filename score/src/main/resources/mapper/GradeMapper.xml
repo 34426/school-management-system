@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ljxy.score.mapper.GradeMapper">
+        <resultMap id="gradAndCourseeMap" type="com.ljxy.score.entity.Grade">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+            <collection property="courseList" ofType="com.ljxy.score.entity.Course">
+                <id column="ce_id" property="id"></id>
+                <result column="ce_name" property="name"></result>
+            </collection>
+        </resultMap>
+    <select id="findAll" resultMap="gradAndCourseeMap" >
+       SELECT
+	    `grade`.*,
+	course.id ce_id,
+	course.NAME ce_name
+        FROM
+	        grade
+	    LEFT OUTER JOIN grade_course ON grade.id = grade_course.grade_id
+	    LEFT OUTER JOIN course ON course.id = grade_course.course_id
+	    <where>
+            <if test="id != null">
+                and grade.id = #{id}
+            </if>
+        </where>
+    </select>
+</mapper>

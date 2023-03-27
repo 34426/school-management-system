@@ -1,0 +1,16 @@
+server:
+  port: 8089
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/ljxy?characterEncoding=utf8&characterSetResults=utf8&autoReconnect=true&failOverReadOnly=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+logging:
+  level:
+    com.ljxy.score.mapper: debug
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: com.ljxy.score.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
