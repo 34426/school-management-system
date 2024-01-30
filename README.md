@@ -1,21 +1,19 @@
 # 校务管理系统
 
+### 9.9￥ 获取完整源码+sql，需要加Q：3577148218 ,备用Q: 3808981644
+### 有问题，或者需要协助调试运行项目的也可联系
 
-### 有问题，或者需要协助调试运行项目的, 可以加QQ：2529519551，或者微信 ：xzxj0206 注明项目，“git+项目名称” ，如：“git学生宿舍管理系统”
+
 
 ### 更多项目： https://github.com/34426?tab=repositories
 
-
-
-## 一、介绍
+## 项目介绍
 
 ### 基于springboot+mybatis+vue前后端分离的校务管理系统
 
-## 二、系统运行界面
+语言：java
 
-![img_1.png](imgs/img_1.png)
-
-![img_2.png](imgs/img_2.png)
+运行工具：idea或eclipse vscode 数据库：mysql
 
 ### 1、管理员功能模块部分页面展示
 
@@ -46,3 +44,5 @@
 ![img_12.png](imgs/img_12.png)
 
 ![img_13.png](imgs/img_13.png)
+
+![img.png](imgs/img.png)
